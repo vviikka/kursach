@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <title>Cases - Каталог чехлов</title>
+    <style>
+        /* Базовые стили */
+        :root {
+            --accent-color: #E4DFCB;
+            --text-color: #5A4A42;
+            --bg-color: #F5F3EE;
+            --footer-bg: #E4DFCB;
+            --button-text-color: #5A4A42;
+            --link-hover-color: #8B7D6B;
+        }
+        
+        body {
+            font-family: 'Source Serif Pro', serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Шапка */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            border-bottom: 1px solid rgba(90, 74, 66, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background-color: var(--footer-bg);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-img {
+            height: 60px;
+            width: auto;
+            display: block;
+        }
+        
+        .dark-logo {
+            display: none;
+        }
+        
+        nav {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        
+        nav a {
+            font-size: 18px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: var(--link-hover-color);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--link-hover-color);
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .cart-icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+        
+        .cart-icon:hover {
+            transform: scale(1.2);
+        }
+        
+        /* Бургер-меню */
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 20;
+        }
+        
+        .burger-line {
+            width: 100%;
+            height: 3px;
+            background: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        
+        /* Основной контент - Каталог */
+        .catalog-content {
+            padding: 120px 5% 60px;
+        }
+        
+        .catalog-title {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-color);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 4px solid var(--accent-color);
+            box-shadow: 0 5px 15px rgba(90, 74, 66, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(90, 74, 66, 0.15);
+        }
+        
+        /* Карусель изображений */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+        }
+        
+        .carousel-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        
+        .carousel-slide img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 0;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .indicator {
+            width: 40px;
+            height: 5px;
+            background-color: rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .indicator:hover, .indicator.active {
+            background-color: var(--accent-color);
+        }
+        
+        .product-info {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .product-price {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--text-color);
+        }
+        
+        .add-to-cart {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--button-text-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        .add-to-cart:hover {
+            background-color: transparent;
+            color: var(--text-color);
+            box-shadow: 0 5px 15px rgba(90, 74, 66, 0.1);
+        }
+        
+        /* Подвал */
+        footer {
+            background-color: var(--footer-bg);
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-left {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .footer-left p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        
+        .phone-link, .address-link {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .phone-link:hover, .address-link:hover {
+            color: var(--link-hover-color);
+        }
+        
+        .footer-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            min-width: 200px;
+        }
+        
+        .social-title {
+            font-size: 16px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 7px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Темная тема */
+        .dark-theme {
+            --accent-color: #5A4A42;
+            --text-color: #E4DFCB;
+            --bg-color: #3A332E;
+            --footer-bg: #5A4A42;
+            --button-text-color: #E4DFCB;
+            --link-hover-color: #C7BEB5;
+        }
+        
+        .dark-theme .light-logo {
+            display: none;
+        }
+        
+        .dark-theme .dark-logo {
+            display: block;
+        }
+        
+        .dark-theme .carousel-container {
+            background-color: #4A4444;
+        }
+        
+        .dark-theme .carousel-indicators {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Кнопка смены темы */
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 15px;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            color: var(--link-hover-color);
+            transform: rotate(30deg);
+        }
+        
+        /* Медиазапросы */
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 5%;
+            }
+            
+            .burger-menu {
+                display: flex;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                width: 70%;
+                background: var(--footer-bg);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 20px;
+                padding: 20px 0;
+                transition: right 0.3s ease;
+                z-index: 15;
+                box-shadow: -5px 5px 15px rgba(90, 74, 66, 0.1);
+                border-radius: 0 0 0 15px;
+                max-height: calc(100vh - 120px);
+                overflow-y: auto;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .catalog-content {
+                padding: 100px 5% 40px;
+            }
+            
+            .catalog-title {
+                font-size: 32px;
+            }
+            
+            .footer-left, .footer-right {
+                min-width: 100%;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .footer-right {
+                margin-top: 20px;
+                align-items: center;
+            }
+            
+            .social-title {
+                margin-right: 0;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .catalog-title {
+                font-size: 28px;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .carousel-container {
+                height: 220px;
+            }
+            
+            .add-to-cart {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .footer-left p, .social-title {
+                font-size: 14px;
+            }
+            
+            .social-icon {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <a href="index.html" class="logo-container">
+            <img src="images/logod.png" alt="Логотип Cases" class="logo-img light-logo">
+            <img src="images/logo.png" alt="Логотип Cases" class="logo-img dark-logo">
+        </a>
+        <button class="burger-menu">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </button>
+        <nav class="nav-links">
+            <a href="catalog.html">Каталог</a>
+            <a href="#contacts">Контакты</a>
+            <a href="korzina.html">Корзина</a>
+            <button class="theme-toggle">🌓</button>
+            <a href="login.html">Вход/Регистрация</a>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="catalog-content">
+        <h1 class="catalog-title">Наши чехлы</h1>
+        
+        <div class="products-grid">
+            <!-- Чехол 1 -->
+            <div class="product-card" data-id="1">
+                <div class="carousel-container">
+                    <div class="carousel-slide active">
+                        <img src="images/ch11.png" alt="Чехол Classic Black">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="images/ch12.png" alt="Чехол Classic Black вид 2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="images/ch13.png" alt="Чехол Classic Black вид 3">
+                    </div>
+                </div>
+                <div class="carousel-indicators">
+                    <div class="indicator active" data-slide="0"></div>
+                    <div class="indicator" data-slide="1"></div>
+                    <div class="indicator" data-slide="2"></div>
+                </div>
+                <div class="product-info">
+                    <div class="product-price">15 BYN</div>
+                    <button class="add-to-cart">Добавить в корзину</button>
+                </div>
+            </div>
+            
+            <!-- Чехол 2 -->
+            <div class="product-card" data-id="2">
+                <div class="carousel-container">
+                    <div class="carousel-slide active">
+                        <img src="images/ch21.png" alt="Чехол Premium Leather">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="images/ch22.png" alt="Чехол Premium Leather вид 2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="images/ch23.png" alt="Чехол Premium Leather вид 3">
+                    </div>
+                </div>
+                <div class="carousel-indicators">
+                    <div class="indicator active" data-slide="0"></div>
+                    <div class="indicator" data-slide="1"></div>
+                    <div class="indicator" data-slide="2"></div>
+                </div>
+                <div class="product-info">
+                    <div class="product-price">15 BYN</div>
+                    <button class="add-to-cart">Добавить в корзину</button>
+                </div>
+            </div>
+            
+            <!-- Чехол 3 -->
+            <div class="product-card" data-id="3">
+                <div class="carousel-container">
+                    <div class="carousel-slide active">
+                        <img src="images/ch31.png" alt="Чехол Transparent Clear">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="images/ch32.png" alt="Чехол Transparent Clear вид 2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="images/ch33.png" alt="Чехол Transparent Clear вид 3">
+                    </div>
+                </div>
+                <div class="carousel-indicators">
+                    <div class="indicator active" data-slide="0"></div>
+                    <div class="indicator" data-slide="1"></div>
+                    <div class="indicator" data-slide="2"></div>
+                </div>
+                <div class="product-info">
+                    <div class="product-price">20 BYN</div>
+                    <button class="add-to-cart">Добавить в корзину</button>
+                </div>
+            </div>
+            
+            <!-- Чехол 4 -->
+            <div class="product-card" data-id="4">
+                <div class="carousel-container">
+                    <div class="carousel-slide active">
+                        <img src="images/ch41.png" alt="Чехол Colorful Pattern">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="images/ch42.png" alt="Чехол Colorful Pattern вид 2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="images/ch43.png" alt="Чехол Colorful Pattern вид 3">
+                    </div>
+                </div>
+                <div class="carousel-indicators">
+                    <div class="indicator active" data-slide="0"></div>
+                    <div class="indicator" data-slide="1"></div>
+                    <div class="indicator" data-slide="2"></div>
+                </div>
+                <div class="product-info">
+                    <div class="product-price">25 BYN</div>
+                    <button class="add-to-cart">Добавить в корзину</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Подвал -->
+    <footer id="contacts">
+        <div class="footer-left">
+            <p>Адрес: <a href="https://yandex.by/maps/157/minsk/geo/31325890/?ll=27.718416%2C53.948901&z=17" target="_blank" rel="noopener noreferrer" 
+                class="address-link">Ул. 50 лет Победы, д 3Б</a></p>
+            <p>Телефон: <a href="tel:+375257193797" class="phone-link">+375(25)7193797</a></p>
+        </div>
+        <div class="footer-right">
+            <div class="social-title">Наши социальные сети</div>
+            <div class="social-links">
+                <img src="images/vk-icon.png" alt="ВКонтакте" class="social-icon">
+                <img src="images/telegram-icon.png" alt="Telegram" class="social-icon">
+                <img src="images/instagram-icon.png" alt="Instagram" class="social-icon">
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Плавная прокрутка
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Переключение темы
+        const themeToggle = document.querySelector('.theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            // Сохранение темы в localStorage
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('darkTheme', isDark);
+        });
+
+        // Проверка сохраненной темы при загрузке
+        if (localStorage.getItem('darkTheme') === 'true') {
+            document.body.classList.add('dark-theme');
+        }
+
+        // Бургер-меню
+        const burgerMenu = document.querySelector('.burger-menu');          
+        const navLinks = document.querySelector('.nav-links');
+        
+        burgerMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            burgerMenu.classList.toggle('active');
+        });
+
+        // Закрытие меню при клике на ссылку
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                burgerMenu.classList.remove('active');
+            });
+        });
+
+        // Карусель изображений
+        document.querySelectorAll('.carousel-container').forEach(container => {
+            const slides = container.querySelectorAll('.carousel-slide');
+            const indicators = container.parentElement.querySelectorAll('.indicator');
+            
+            // Автопрокрутка карусели
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+            
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                indicators.forEach(indicator => indicator.classList.remove('active'));
+                
+                slides[index].classList.add('active');
+                indicators[index].classList.add('active');
+                currentSlide = index;
+            }
+            
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
+            
+            // Переключение по индикаторам
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    showSlide(index);
+                });
+            });
+            
+            // Автопрокрутка каждые 5 секунд
+            setInterval(nextSlide, 5000);
+        });
+
+        // Корзина
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Добавление товара в корзину
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productCard = this.closest('.product-card');
+                const productId = productCard.getAttribute('data-id');
+                
+                // Проверяем, есть ли уже такой товар в корзине
+                const existingItem = cart.find(item => item.id === productId);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        id: productId,
+                        quantity: 1,
+                        price: 15 // Фиксированная цена из макета
+                    });
+                }
+                
+                // Сохраняем корзину в localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // Визуальный эффект при добавлении
+                this.textContent = 'Добавлено!';
+                this.style.backgroundColor = '#8BC34A';
+                
+                setTimeout(() => {
+                    this.textContent = 'Добавить в корзину';
+                    this.style.backgroundColor = '';
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
